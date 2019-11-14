@@ -28,6 +28,16 @@ export default {
     },
     getUser () {
       return this.$store.state.username
+    },
+    startGame () {
+      return this.$store.state.objectData.playStatus
+    }
+  },
+  watch: {
+    startGame (value) {
+      if (value){
+        this.$router.push({ path: `/game/${this.$route.params.room}`})
+      }
     }
   },
   methods: {

@@ -77,8 +77,8 @@ export default {
       return newHTML
     },
     text () {
-      // return this.$store.state.objectData
-      return texts[0].text
+      return this.$store.state.objectData.text
+      // return texts[0].text
     }
   },
   methods: {
@@ -109,28 +109,25 @@ export default {
     },
     time (value) {
       if (value === 0) {
-        alert(`game selesai, WPM kamu sebesar ${this.wpm.toFixed(1)} dengan kata yang benar sebanyak ${this.correctWord}`)
         clearTimeout(this.countTime)
-        // this.$route.dispatch('updatePosition', {
-        //   position: this.correctWord,
-        //   wpm: this.wpm,
-        //   room: this.$route.params.room
-        // })
+        const lastposition = this.correctWord
+        const lastwpm = this.wpm
+        this.$store.dispatch('updatePosition', {
+          position: lastposition,
+          wpm: lastwpm,
+          room: this.$route.params.room
+        })
+        alert(`game selesai, WPM kamu sebesar ${lastwpm.toFixed(1)} dengan kata yang benar sebanyak ${lastposition}`)
         this.$router.push({ path: '/' })
-        // this.correctWord = 0
-        // this.typing = ''
-        // this.fetchText()
-        // this.started = Date.now()
-        // this.time = 20
-        // this.countTime = setInterval(this.minTime, 1000)
         // hit database selesai
-      } else if (value % 3 === 0) {
+      }
+      else if (value % 3 === 0) {
         // hit database
-        // this.$route.dispatch('updatePosition', {
-        //   position: this.correctWord,
-        //   wpm: this.wpm,
-        //   room: this.$route.params.room
-        // })
+        this.$store.dispatch('updatePosition', {
+          position: this.correctWord,
+          wpm: this.wpm,
+          room: this.$route.params.room
+        })
       }
     }
   },
