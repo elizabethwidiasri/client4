@@ -69,7 +69,7 @@ export default new Vuex.Store({
       db.collection('room').doc(`${payload}`)
         .onSnapshot(function (doc) {
           commit('ADD_DATA', doc.data())
-          console.log('data saat ini', doc.data())
+          // console.log('data saat ini', doc.data())
         })
     },
     addPlayer ({ commit, state }, payload) {
@@ -93,19 +93,13 @@ export default new Vuex.Store({
         })
     },
     updatePosition ({ commit, state }, payload) {
-      console.log("masuk update position", payload);
-      
-      db.collection('room').doc(`${payload.room}`).update({
+      // console.log("masuk update position", payload);
+      return db.collection('room').doc(`${payload.room}`).update({
         [`player${state.countPlayer}.position`]: payload.position,
         [`player${state.countPlayer}.wpm`]: payload.wpm,
         [`player${state.countPlayer}.username`]: state.username
       })
-        .then(function () {
-          console.log('Document successfully updated!')
-        })
-        .catch(function (err) {
-          console.error('Error writing document: ', err)
-        })
+        
     },
     playNow ({ commit, name }, roomlink) {
       db.collection('room').doc(`${roomlink}`).update({

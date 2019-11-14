@@ -112,13 +112,21 @@ export default {
         clearTimeout(this.countTime)
         const lastposition = this.correctWord
         const lastwpm = this.wpm
+        
         this.$store.dispatch('updatePosition', {
           position: lastposition,
           wpm: lastwpm,
           room: this.$route.params.room
         })
-        alert(`game selesai, WPM kamu sebesar ${lastwpm.toFixed(1)} dengan kata yang benar sebanyak ${lastposition}`)
-        this.$router.push({ path: '/' })
+          .then(() => {
+            alert(`game selesai, WPM kamu sebesar ${lastwpm.toFixed(1)} dengan kata yang benar sebanyak ${lastposition}`)
+            this.$router.push({ path: '/' })
+            console.log('Document successfully updated!')
+          })
+          .catch(function (err) {
+            console.error('Error writing document: ', err)
+          })
+        
         // hit database selesai
       }
       else if (value % 3 === 0) {
