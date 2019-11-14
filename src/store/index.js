@@ -2,15 +2,19 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import router from '../router'
 import db from '../config/firebase'
+import texts from '../assets/english'
 // const firebase = require('firebase/app')
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    objectData: '',
+    objectData: {},
     username: '',
+    wpm: 0,
+    position: 0,
     linkroom: '',
+    countPlayer: 0,
     master: false
   },
   mutations: {
@@ -24,24 +28,34 @@ export default new Vuex.Store({
       state.linkroom = payload
     },
     CHANGE_MASTER (state) {
-      state.master = false
+      state.master = true
+    },
+    CHANGE_COUNT_PLAYER (state, payload) {
+      state.countPlayer = payload
+    },
+    CHANGE_PLAY_STATUS (state, payload) {
+      state.playStatus = payload
     }
   },
   actions: {
     create ({ commit, state }, payload) {
-      console.log('masuk store')
+      const index = Math.round(Math.random() * texts.length)
       db.collection('room').add(
         {
           count: 1,
           player1: {
             username: payload,
+            wpm: 0,
             position: 0
-          }
+          },
+          text: texts[index].text,
+          playStatus: false
         }
       )
         .then((docRef) => {
           commit('CHANGE_NAME', payload)
           commit('CHANGE_ROOM', docRef.id)
+          commit('CHANGE_COUNT_PLAYER', 1)
           commit('CHANGE_MASTER')
           router.push(`/about/${state.linkroom}`)
           console.log('Document written with ID: ', docRef.id)
@@ -50,28 +64,56 @@ export default new Vuex.Store({
           console.error('Error adding document: ', error)
         })
     },
-    updateData ({ commit, state }, payload) {
+    fetchData ({ commit, state }, payload) {
       commit('CHANGE_ROOM', payload)
       db.collection('room').doc(`${payload}`)
         .onSnapshot(function (doc) {
           commit('ADD_DATA', doc.data())
-          console.log('makan <<<<<<<<<<<<<<')
           console.log('data saat ini', doc.data())
         })
     },
     addPlayer ({ commit, state }, payload) {
+      let countPlayer = state.objectData.count + 1
+      commit('CHANGE_COUNT_PLAYER', countPlayer)
       db.collection('room').doc(`${payload.room}`).update({
-        [`player${state.objectData.count + 1}`]: {
+        [`player${countPlayer}`]: {
           username: payload.newuser,
+          wpm: 0,
           position: 0
         },
         count: state.objectData.count + 1
       })
         .then(function () {
+          commit('CHANGE_NAME', payload.newuser)
+          console.log()
           console.log('Document successfully written!')
         })
         .catch(function (error) {
           console.error('Error writing document: ', error)
+        })
+    },
+    updatePosition ({ commit, state }, payload) {
+      db.collection('room').doc(`${payload.room}`).update({
+        [`player${state.countPlayer}.position`]: payload.position,
+        [`player${state.countPlayer}.wpm`]: payload.wpm,
+        [`player${state.countPlayer}.username`]: state.username
+      })
+        .then(function () {
+          console.log('Document successfully updated!')
+        })
+        .catch(function (err) {
+          console.error('Error writing document: ', err)
+        })
+    },
+    playNow ({ commit, name }, roomlink) {
+      db.collection('room').doc(`${roomlink}`).update({
+        playStatus: true
+      })
+        .then(function () {
+          console.log('GAME PLAY!')
+        })
+        .catch(function (err) {
+          console.error('Error played game: ', err)
         })
     }
   }
