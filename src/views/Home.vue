@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" style="">
     <form @submit.prevent="createRoom()">
       <input v-model="username" type="text" placeholder="username">
       <button type="submit">CreateRoom</button>
@@ -28,3 +28,5 @@ export default {
   }
 }
 </script>
+
+
