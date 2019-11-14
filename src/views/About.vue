@@ -5,7 +5,7 @@
       <input v-model="newuser" type="text" placeholder="username">
       <button type="submit">join</button>
     </form>
-    <button @click="playNow">PLAY!</button>
+    <button v-if="getMaster" @click="playNow">PLAY!</button>
     <button @click="updatePosition">UPDATE!</button>
     <div>
       {{ getData }}
@@ -31,6 +31,9 @@ export default {
     },
     startGame () {
       return this.$store.state.objectData.playStatus
+    },
+    getMaster () {
+      return this.$store.state.master
     }
   },
   watch: {
