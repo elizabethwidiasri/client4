@@ -1,17 +1,14 @@
 <template>
-  <div class="home">
-    <form @submit.prevent="createRoom()">
-      <input v-model="username" type="text" placeholder="username">
-      <button type="submit">CreateRoom</button>
-    </form>
-  </div>
+ <Body />
 </template>
 
 <script>
+import Body from '../components/Body.vue'
+
 export default {
   name: 'home',
   components: {
-
+    Body
   },
   data () {
     return {

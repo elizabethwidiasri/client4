@@ -17,7 +17,7 @@ export default {
   data () {
     return {
       formusername: true,
-      newuser: '',
+      newuser: ''
     }
   },
   computed: {
@@ -34,7 +34,6 @@ export default {
     userJoinRoom () {
       console.log(this.newuser)
       this.$store.dispatch('addPlayer', { room: this.$route.params.room, newuser: this.newuser })
-      
     }
   },
   created () {
