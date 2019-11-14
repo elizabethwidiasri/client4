@@ -93,8 +93,6 @@ export default new Vuex.Store({
         })
     },
     updatePosition ({ commit, state }, payload) {
-      console.log("masuk update position", payload);
-      
       db.collection('room').doc(`${payload.room}`).update({
         [`player${state.countPlayer}.position`]: payload.position,
         [`player${state.countPlayer}.wpm`]: payload.wpm,
