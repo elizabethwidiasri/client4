@@ -42,7 +42,7 @@
       </b-container>
     </b-container>
 
-    {{ players }}
+    <!-- {{ players }} -->
     <div class="animation">
       <div class="track" v-for="(player, i) in players" :key="i">
         <div class="emot" :style="'margin-left:'+posisi+'%;'">{{ emojiList[i] }}</div>
@@ -119,8 +119,10 @@ export default {
     prevent: function (e) {
       const index = this.typing.length - 1
       if (this.typing[index] !== this.text[index] && e.key !== 'Backspace') {
+        this.playSound('https://www.soundjay.com/button/button-10.mp3')
         e.preventDefault()
       } else if (this.typing[index] === this.text[index] && e.key === 'Backspace') {
+        this.playSound('https://www.soundjay.com/button/button-10.mp3')
         e.preventDefault()
       }
     },
