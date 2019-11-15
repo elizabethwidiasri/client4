@@ -201,6 +201,7 @@ export default {
   textarea {
     width: 100%;
     background: white;
+    font-family: 'Quicksand', sans-serif !important;    
   }
   .typer {
     width: 100%;
@@ -233,6 +234,7 @@ export default {
     border-radius: 20%;
     padding: 5px;
     font-size: 20px;
+    font-family: 'Quicksand', sans-serif !important;
   }
   .center{
     display: flex;
@@ -242,6 +244,10 @@ export default {
 </style>
 
 <style>
+  @import url('https://fonts.googleapis.com/css?family=Quicksand&display=swap');
+  .paragraph{
+    font-family: 'Quicksand', sans-serif !important;
+  }
   .correct {
     color: rgb(60, 214, 21);
     font-size: 22px;
