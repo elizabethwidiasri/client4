@@ -1,5 +1,7 @@
 <template>
-  <div id="app" oncopy="return false" oncut="return false" onpaste="return false">
+<div class="game">
+  <result v-if="finish"></result>
+  <div v-if="!finish" id="app" oncopy="return false" oncut="return false" onpaste="return false">
     <b-navbar toggleable="lg" type="dark" variant="primary">
       <b-navbar-brand href="#" variant="light"><strong>BALAPAN NGETIK</strong></b-navbar-brand>
 
@@ -33,10 +35,12 @@
       </b-container>
     </b-container>
   </div>
+</div>
 </template>
 
 <script>
 import texts from '../assets/english'
+import result from '../components/result'
 export default {
   name: 'Game',
   data () {
@@ -46,8 +50,12 @@ export default {
       typoIndex: -1,
       correctWord: -1,
       wpm: 0,
-      started: Date.now()
+      started: Date.now(),
+      finish: false
     }
+  },
+  components: {
+    result
   },
   computed: {
     splitText () {
