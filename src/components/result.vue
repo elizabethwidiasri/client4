@@ -15,20 +15,20 @@
 <script>
 export default {
   name: 'Result',
-  computed : {
+  computed: {
     players () {
       let player = []
       const data = Object.values(this.$store.state.objectData)
       const arr = data.slice(2, data.length - 1)
-        for (var i=0; i<arr.length; i++) {
-            for (var j=i+1; j<arr.length; j++) {
-                if (arr[j].wpm > arr[i].wpm) {      //untuk mengurutkan dari kecil ke besar, jika ingin mengurutkan dari besar ke kecil maka ganti < menjadi >
-                var tampung = arr[i]
-                arr[i] = arr[j]
-                arr[j] = tampung
-                }
-            }
+      for (var i = 0; i < arr.length; i++) {
+        for (var j = i + 1; j < arr.length; j++) {
+          if (arr[j].wpm > arr[i].wpm) { // untuk mengurutkan dari kecil ke besar, jika ingin mengurutkan dari besar ke kecil maka ganti < menjadi >
+            var tampung = arr[i]
+            arr[i] = arr[j]
+            arr[j] = tampung
+          }
         }
+      }
       return arr
     }
   }
@@ -41,7 +41,7 @@ export default {
 @import url('https://fonts.googleapis.com/css?family=Domine&display=swap');
     .result {
         display: flex;
-        justify-content: center; 
+        justify-content: center;
     }
 
 </style>

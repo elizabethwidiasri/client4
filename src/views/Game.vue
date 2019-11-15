@@ -103,7 +103,7 @@ export default {
       return this.$store.state.objectData.text
     },
     posisi () {
-      if (this.$store.state.objectData) {        
+      if (this.$store.state.objectData) {
         return (((this.$store.state.objectData.player1.position) / this.text.length) * 100)
       } else {
         return 0
@@ -136,10 +136,9 @@ export default {
   },
   watch: {
     typing (value) {
-      if(value.length === this.text.length){
+      if (value.length === this.text.length) {
         this.finish = true
-      }
-      else {
+      } else {
         for (let i = 0; i < value.length; i++) {
           if (value[i] !== this.text[i]) {
             this.typoIndex = i
@@ -148,9 +147,9 @@ export default {
           this.typoIndex = -1
         }
       }
-        this.playSound('https://www.soundjay.com/button/button-48.mp3')
-        this.correctWord = this.typing.split(' ').length
-        this.wpm = this.correctWord / ((Date.now() - this.started) / 60000)
+      this.playSound('https://www.soundjay.com/button/button-48.mp3')
+      this.correctWord = this.typing.split(' ').length
+      this.wpm = this.correctWord / ((Date.now() - this.started) / 60000)
     },
     time (value) {
       if (value === 0) {
