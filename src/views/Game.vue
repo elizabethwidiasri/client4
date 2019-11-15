@@ -119,10 +119,17 @@ export default {
     },
     minTime () {
       this.time -= 1
+    },
+    playSound (sound) {
+      if (sound) {
+        var audio = new Audio(sound)
+        audio.play()
+      }
     }
   },
   watch: {
     typing (value) {
+      this.playSound('https://www.soundjay.com/button/button-48.mp3')
       for (let i = 0; i < value.length; i++) {
         if (value[i] !== this.text[i]) {
           this.typoIndex = i
