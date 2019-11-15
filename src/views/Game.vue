@@ -39,7 +39,7 @@
       </b-container>
     </b-container>
 
-    <!-- {{ player }} -->
+    {{ players }}
     <div class="animation">
       <div class="track" v-for="(player, i) in players" :key="i">
         <div class="emot" :style="'margin-left:'+posisi+'%;'">{{ emojiList[i] }}</div>
@@ -97,12 +97,14 @@ export default {
       return newHTML
     },
     text () {
-      return this.$store.state.objectData.text
-      // return texts[0].text
+      // return this.$store.state.objectData.text
+      return "evans"
     },
     posisi () {
       if (this.$store.state.objectData) {
-        return (((this.$store.state.objectData.player1.position) / this.$store.state.objectData.text.length) * 100)
+        console.log(((this.$store.state.objectData.player1.position) / this.text.length) * 100);
+        
+        return (((this.$store.state.objectData.player1.position) / this.text.length) * 100)
       } else {
         return 0
       }
@@ -128,15 +130,20 @@ export default {
   },
   watch: {
     typing (value) {
-      for (let i = 0; i < value.length; i++) {
-        if (value[i] !== this.text[i]) {
-          this.typoIndex = i
-          break
-        }
-        this.typoIndex = -1
+      if(value.length === this.text.length){
+        this.finish = true
       }
-      this.correctWord = this.typing.split(' ').length
-      this.wpm = this.correctWord / ((Date.now() - this.started) / 60000)
+      else {
+        for (let i = 0; i < value.length; i++) {
+          if (value[i] !== this.text[i]) {
+            this.typoIndex = i
+            break
+          }
+          this.typoIndex = -1
+        }
+        this.correctWord = this.typing.split(' ').length
+        this.wpm = this.correctWord / ((Date.now() - this.started) / 60000)
+      }
     },
     time (value) {
       if (value === 0) {
@@ -151,7 +158,8 @@ export default {
         })
           .then(() => {
             alert(`game selesai, WPM kamu sebesar ${lastwpm.toFixed(1)} dengan kata yang benar sebanyak ${lastposition}`)
-            this.$router.push({ path: '/' })
+            // this.$router.push({ path: '/' })
+            this.finish = true
             console.log('Document successfully updated!')
           })
           .catch(function (err) {
