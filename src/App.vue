@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link>
+      <router-link to="/">
+          <p class="game-title text-white" style="font-family: 'Abril Fatface', cursive; font-size: 90px; letter-spacing: 10px; text-decoration: none; "><strong>pacepetcepet</strong></p>
+      </router-link>
     </div>
     <router-view/>
   </div>
@@ -10,7 +12,7 @@
 <style>
 
 body, html {
-  height: 100%;
+  height: 100vh;
   margin: 0;
 }
 
@@ -29,7 +31,7 @@ body, html {
 }
 
 #nav {
-  padding: 30px;
+  padding: 20px;
 }
 
 #nav a {
@@ -40,4 +42,10 @@ body, html {
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
+@import url('https://fonts.googleapis.com/css?family=Abril+Fatface&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Quicksand&display=swap');
+
+
+
 </style>
