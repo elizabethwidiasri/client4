@@ -38,8 +38,8 @@ export default {
   },
   watch: {
     startGame (value) {
-      if (value){
-        this.$router.push({ path: `/game/${this.$route.params.room}`})
+      if (value) {
+        this.$router.push({ path: `/game/${this.$route.params.room}` })
       }
     }
   },
@@ -57,7 +57,7 @@ export default {
       this.$store.dispatch('updatePosition', {
         room: this.$route.params.room,
         position: 20,
-        wpm: 30,
+        wpm: 30
       })
     }
   },

@@ -99,7 +99,6 @@ export default new Vuex.Store({
         [`player${state.countPlayer}.wpm`]: payload.wpm,
         [`player${state.countPlayer}.username`]: state.username
       })
-        
     },
     playNow ({ commit, name }, roomlink) {
       db.collection('room').doc(`${roomlink}`).update({

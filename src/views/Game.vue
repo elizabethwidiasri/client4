@@ -10,7 +10,9 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
+    <div>
 
+    </div>
     <b-container class="mt-5">
       <b-container class="gamecontainer">
         <b-row class="my-5">
@@ -34,11 +36,19 @@
         </b-row>
       </b-container>
     </b-container>
+
+    <!-- {{ player }} -->
+    <div class="animation">
+      <div class="track" v-for="(player, i) in players" :key="i">
+        <div class="emot" :style="'margin-left:'+posisi+'%;'">{{ emojiList[i] }}</div>
+        <div class="name">{{ player.username }}</div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import texts from '../assets/english'
+// import texts from '../assets/english'
 export default {
   name: 'Game',
   data () {
@@ -49,7 +59,8 @@ export default {
       wpm: 0,
       started: '',
       time: 30,
-      countTime: ''
+      countTime: '',
+      emojiList: ['🐶', '🐹', '🐰', '🦊', '🦝', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🙉', '🐔', '🐧', '🐥', '🦉', '🐺', '🐴', '🦋', '🐌', '🐞', '🐳', '🦍', '🐘', '🦔']
     }
   },
   computed: {
@@ -79,6 +90,17 @@ export default {
     text () {
       return this.$store.state.objectData.text
       // return texts[0].text
+    },
+    posisi () {
+      if (this.$store.state.objectData) {
+        return (((this.$store.state.objectData.player1.position) / this.$store.state.objectData.text.length) * 100)
+      } else {
+        return 0
+      }
+    },
+    players () {
+      const player = Object.values(this.$store.state.objectData)
+      return player.slice(2, player.length - 1)
     }
   },
   methods: {
@@ -112,7 +134,7 @@ export default {
         clearTimeout(this.countTime)
         const lastposition = this.correctWord
         const lastwpm = this.wpm
-        
+
         this.$store.dispatch('updatePosition', {
           position: lastposition,
           wpm: lastwpm,
@@ -126,13 +148,12 @@ export default {
           .catch(function (err) {
             console.error('Error writing document: ', err)
           })
-        
+
         // hit database selesai
-      }
-      else if (value % 3 === 0) {
+      } else if (value % 3 === 0) {
         // hit database
         this.$store.dispatch('updatePosition', {
-          position: this.correctWord,
+          position: this.typing.length,
           wpm: this.wpm,
           room: this.$route.params.room
         })
@@ -169,5 +190,25 @@ export default {
   .typo {
     color: #f00;
     font-size: 23px;
+  }
+
+  .track {
+    color: aliceblue;
+    background-image: url('../assets/track.jpg');
+    background-size: 100% 100%;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    padding: 0px 10% 0px 5%;
+  }
+  .emot{
+    font-size: 60px;
+  }
+  .name{
+    color: bisque;
+    background-color: black;
+    border-radius: 20%;
+    padding: 5px;
+    font-size: 20px;
   }
 </style>
