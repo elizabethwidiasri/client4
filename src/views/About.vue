@@ -1,10 +1,12 @@
 <template>
   <div class="about">
     <h1>Welcome to the room!</h1>
-    <form v-if="formusername" @submit.prevent="userJoinRoom">
+    <form v-if="!getUser" @submit.prevent="userJoinRoom">
       <input v-model="newuser" type="text" placeholder="username">
       <button type="submit">join</button>
     </form>
+    <button v-if="getMaster" @click="playNow">PLAY!</button>
+    <button @click="updatePosition">UPDATE!</button>
     <div>
       {{ getData }}
       <p v-for="(data,key) in getData" :key="key">{{ data.username }}</p>
@@ -17,24 +19,46 @@ export default {
   data () {
     return {
       formusername: true,
-      newuser: '',
+      newuser: ''
     }
   },
   computed: {
     getData () {
-      console.log(this.$store.state.objectData)
       return this.$store.state.objectData
+    },
+    getUser () {
+      return this.$store.state.username
+    },
+    startGame () {
+      return this.$store.state.objectData.playStatus
+    },
+    getMaster () {
+      return this.$store.state.master
+    }
+  },
+  watch: {
+    startGame (value) {
+      if (value) {
+        this.$router.push({ path: `/game/${this.$route.params.room}` })
+      }
     }
   },
   methods: {
     fetchData () {
-      console.log('masuk ke bawa', this.$route.params.room)
-      this.$store.dispatch('updateData', this.$route.params.room)
+      this.$store.dispatch('fetchData', this.$route.params.room)
     },
     userJoinRoom () {
-      console.log(this.newuser)
       this.$store.dispatch('addPlayer', { room: this.$route.params.room, newuser: this.newuser })
-      
+    },
+    playNow () {
+      this.$store.dispatch('playNow', this.$route.params.room)
+    },
+    updatePosition () {
+      this.$store.dispatch('updatePosition', {
+        room: this.$route.params.room,
+        position: 20,
+        wpm: 30
+      })
     }
   },
   created () {

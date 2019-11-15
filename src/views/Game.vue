@@ -12,19 +12,23 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
+    <div>
 
+    </div>
     <b-container class="mt-5">
       <b-container class="gamecontainer">
         <b-row class="my-5">
           <div class="paragraph" v-html="outputHTML">
+          </div>
+          <div>
+            <h4>{{ time }}</h4>
           </div>
           <div class="typer">
             <textarea
               autofocus="autofocus"
               v-model="typing"
               placeholder="start typing here"
-              @keydown="prevent"
-              @keyup="printDigit($event)">
+              @keydown="prevent">
             </textarea>
             <div v-if="typoIndex != -1" class="alert alert-danger alert-dismissible fade show">
               WRONG TYPING!
@@ -34,6 +38,14 @@
         </b-row>
       </b-container>
     </b-container>
+
+    <!-- {{ player }} -->
+    <div class="animation">
+      <div class="track" v-for="(player, i) in players" :key="i">
+        <div class="emot" :style="'margin-left:'+posisi+'%;'">{{ emojiList[i] }}</div>
+        <div class="name">{{ player.username }}</div>
+      </div>
+    </div>
   </div>
 </div>
 </template>
@@ -41,17 +53,20 @@
 <script>
 import texts from '../assets/english'
 import result from '../components/result'
+// import texts from '../assets/english'
 export default {
   name: 'Game',
   data () {
     return {
-      text: '',
       typing: '',
       typoIndex: -1,
-      correctWord: -1,
+      correctWord: 0,
       wpm: 0,
-      started: Date.now(),
-      finish: false
+      finish: false,
+      started: '',
+      time: 30,
+      countTime: '',
+      emojiList: ['🐶', '🐹', '🐰', '🦊', '🦝', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🙉', '🐔', '🐧', '🐥', '🦉', '🐺', '🐴', '🦋', '🐌', '🐞', '🐳', '🦍', '🐘', '🦔']
     }
   },
   components: {
@@ -80,28 +95,35 @@ export default {
       newHTML += this.text.substr(this.typing.length)
 
       return newHTML
+    },
+    text () {
+      return this.$store.state.objectData.text
+      // return texts[0].text
+    },
+    posisi () {
+      if (this.$store.state.objectData) {
+        return (((this.$store.state.objectData.player1.position) / this.$store.state.objectData.text.length) * 100)
+      } else {
+        return 0
+      }
+    },
+    players () {
+      const player = Object.values(this.$store.state.objectData)
+      return player.slice(2, player.length - 1)
     }
   },
   methods: {
     // setter
-    fetchText () {
-      const index = Math.round(Math.random() * 13)
-      this.text = texts[index].text
-    },
     prevent: function (e) {
-      // console.log(this.typing.length)
-      // console.log(this.text)
-      this.correctWord++
-      if (this.typing.length !== 0) {
-        const index = this.typing.length - 1
-        if (this.typing[index] !== this.text[index] && e.key !== 'Backspace') {
-          e.preventDefault()
-        } else {
-          if (this.typing[index] === this.text[index] && e.key === 'Backspace') {
-            e.preventDefault()
-          }
-        }
+      const index = this.typing.length - 1
+      if (this.typing[index] !== this.text[index] && e.key !== 'Backspace') {
+        e.preventDefault()
+      } else if (this.typing[index] === this.text[index] && e.key === 'Backspace') {
+        e.preventDefault()
       }
+    },
+    minTime () {
+      this.time -= 1
     }
   },
   watch: {
@@ -113,13 +135,43 @@ export default {
         }
         this.typoIndex = -1
       }
-      console.log(value)
-      this.wpm = this.correctWord / 5 / ((Date.now() - this.started) / 60000)
-      console.log(this.wpm)
+      this.correctWord = this.typing.split(' ').length
+      this.wpm = this.correctWord / ((Date.now() - this.started) / 60000)
+    },
+    time (value) {
+      if (value === 0) {
+        clearTimeout(this.countTime)
+        const lastposition = this.correctWord
+        const lastwpm = this.wpm
+
+        this.$store.dispatch('updatePosition', {
+          position: lastposition,
+          wpm: lastwpm,
+          room: this.$route.params.room
+        })
+          .then(() => {
+            alert(`game selesai, WPM kamu sebesar ${lastwpm.toFixed(1)} dengan kata yang benar sebanyak ${lastposition}`)
+            this.$router.push({ path: '/' })
+            console.log('Document successfully updated!')
+          })
+          .catch(function (err) {
+            console.error('Error writing document: ', err)
+          })
+
+        // hit database selesai
+      } else if (value % 3 === 0) {
+        // hit database
+        this.$store.dispatch('updatePosition', {
+          position: this.typing.length,
+          wpm: this.wpm,
+          room: this.$route.params.room
+        })
+      }
     }
   },
-  created () {
-    this.fetchText()
+  mounted () {
+    this.started = Date.now()
+    this.countTime = setInterval(this.minTime, 1000)
   }
 }
 </script>
@@ -141,11 +193,31 @@ export default {
     width: 100%;
   }
   .correct {
-    color: rgb(63,81,181);
+    color: rgb(51, 255, 0);
     font-size: 22px;
   }
   .typo {
     color: #f00;
     font-size: 23px;
+  }
+
+  .track {
+    color: aliceblue;
+    background-image: url('../assets/track.jpg');
+    background-size: 100% 100%;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    padding: 0px 10% 0px 5%;
+  }
+  .emot{
+    font-size: 60px;
+  }
+  .name{
+    color: bisque;
+    background-color: black;
+    border-radius: 20%;
+    padding: 5px;
+    font-size: 20px;
   }
 </style>

@@ -20,7 +20,6 @@ export default {
   },
   methods: {
     createRoom () {
-      console.log('roomCreated', this.username)
       this.$store.dispatch('create', this.username)
     }
   },
