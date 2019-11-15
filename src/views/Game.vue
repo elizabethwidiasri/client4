@@ -93,10 +93,17 @@ export default {
     },
     minTime () {
       this.time -= 1
+    },
+    playSound (sound) {
+      if (sound) {
+        var audio = new Audio(sound)
+        audio.play()
+      }
     }
   },
   watch: {
     typing (value) {
+      this.playSound('https://www.soundjay.com/button/button-48.mp3')
       for (let i = 0; i < value.length; i++) {
         if (value[i] !== this.text[i]) {
           this.typoIndex = i
@@ -112,7 +119,7 @@ export default {
         clearTimeout(this.countTime)
         const lastposition = this.correctWord
         const lastwpm = this.wpm
-        
+
         this.$store.dispatch('updatePosition', {
           position: lastposition,
           wpm: lastwpm,
@@ -126,10 +133,9 @@ export default {
           .catch(function (err) {
             console.error('Error writing document: ', err)
           })
-        
+
         // hit database selesai
-      }
-      else if (value % 3 === 0) {
+      } else if (value % 3 === 0) {
         // hit database
         this.$store.dispatch('updatePosition', {
           position: this.correctWord,

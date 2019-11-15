@@ -1,17 +1,45 @@
 <template>
-  <div class="about">
-    <h1>Welcome to the room!</h1>
-    <form v-if="!getUser" @submit.prevent="userJoinRoom">
-      <input v-model="newuser" type="text" placeholder="username">
-      <button type="submit">join</button>
-    </form>
-    <button v-if="getMaster" @click="playNow">PLAY!</button>
-    <button @click="updatePosition">UPDATE!</button>
-    <div>
-      {{ getData }}
-      <p v-for="(data,key) in getData" :key="key">{{ data.username }}</p>
-    </div>
-  </div>
+  <b-container class="pb-3">
+    <b-row>
+      <b-col>
+        <h1 class="welcome-title">Welcome to join with {{ getTotalPlayer }} other players in this room!</h1>
+      </b-col>
+    </b-row>
+
+    <b-row v-if="!getUser" class="justify-content-center my-4">
+      <b-col cols="7">
+
+      <form @submit.prevent="userJoinRoom">
+        <b-input-group>
+          <b-form-input v-model="newuser" placeholder="Enter your name" type="text"></b-form-input>
+          <b-input-group-append>
+            <b-button type="submit" variant="outline-secondary">Button</b-button>
+          </b-input-group-append>
+        </b-input-group>
+      </form>
+
+      </b-col>
+    </b-row>
+
+    <b-row>
+      <b-col>
+        <b-button v-if="getMaster" @click="playNow" class="btn-lg my-3" variant="success">PLAY!</b-button>
+      </b-col>
+    </b-row>
+
+    <b-row class="justify-content-center mt-4">
+      <b-col cols="6">
+        <div v-for="(data,key) in getData" :key="key">
+          <b-card v-if="data.username" class="text-center background-color-XXX mb-2">
+            <div class="text-white" style="font-size: 30px;">
+              {{ data.username }}
+            </div>
+          </b-card>
+        </div>
+      </b-col>
+    </b-row>
+
+  </b-container>
 </template>
 
 <script>
@@ -24,7 +52,21 @@ export default {
   },
   computed: {
     getData () {
-      return this.$store.state.objectData
+      const data = Object.values(this.$store.state.objectData)
+      const arr = data.slice(2, data.length - 1)
+      for (var i = 0; i < arr.length; i++) {
+        for (var j = i + 1; j < arr.length; j++) {
+          if (arr[j].playerOrder > arr[i].playerOrder) {
+            var tampung = arr[i]
+            arr[i] = arr[j]
+            arr[j] = tampung
+          }
+        }
+      }
+      return arr
+    },
+    getTotalPlayer () {
+      return this.$store.state.objectData.count
     },
     getUser () {
       return this.$store.state.username
@@ -38,8 +80,8 @@ export default {
   },
   watch: {
     startGame (value) {
-      if (value){
-        this.$router.push({ path: `/game/${this.$route.params.room}`})
+      if (value) {
+        this.$router.push({ path: `/game/${this.$route.params.room}` })
       }
     }
   },
@@ -52,13 +94,6 @@ export default {
     },
     playNow () {
       this.$store.dispatch('playNow', this.$route.params.room)
-    },
-    updatePosition () {
-      this.$store.dispatch('updatePosition', {
-        room: this.$route.params.room,
-        position: 20,
-        wpm: 30,
-      })
     }
   },
   created () {
@@ -66,3 +101,15 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  @import url('https://fonts.googleapis.com/css?family=Abril+Fatface&display=swap');
+  @import url('https://fonts.googleapis.com/css?family=Quicksand&display=swap');
+
+  .welcome-title{
+    font-family: 'Quicksand', sans-serif;
+  }
+  .background-color-XXX{
+    background-color: #62B69B;
+  }
+</style>

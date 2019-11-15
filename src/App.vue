@@ -7,6 +7,26 @@
   </div>
 </template>
 
+<script>
+export default {
+  methods: {
+    playSound (sound) {
+      if (sound) {
+        var myAudio = new Audio(sound)
+        myAudio.addEventListener('ended', function () {
+          this.currentTime = 0
+          this.play()
+        }, false)
+        myAudio.play()
+      }
+    }
+  },
+  created () {
+    this.playSound('https://www.soundjay.com/free-music/barn-beat-01.mp3')
+  }
+}
+</script>
+
 <style>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;

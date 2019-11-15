@@ -40,20 +40,21 @@ export default new Vuex.Store({
   actions: {
     create ({ commit, state }, payload) {
       const index = Math.round(Math.random() * texts.length)
+      commit('CHANGE_NAME', payload)
       db.collection('room').add(
         {
           count: 1,
           player1: {
             username: payload,
             wpm: 0,
-            position: 0
+            position: 0,
+            playerOrder: 1
           },
           text: texts[index].text,
           playStatus: false
         }
       )
         .then((docRef) => {
-          commit('CHANGE_NAME', payload)
           commit('CHANGE_ROOM', docRef.id)
           commit('CHANGE_COUNT_PLAYER', 1)
           commit('CHANGE_MASTER')
@@ -79,7 +80,8 @@ export default new Vuex.Store({
         [`player${countPlayer}`]: {
           username: payload.newuser,
           wpm: 0,
-          position: 0
+          position: 0,
+          playerOrder: countPlayer
         },
         count: state.objectData.count + 1
       })
@@ -93,13 +95,11 @@ export default new Vuex.Store({
         })
     },
     updatePosition ({ commit, state }, payload) {
-      // console.log("masuk update position", payload);
       return db.collection('room').doc(`${payload.room}`).update({
         [`player${state.countPlayer}.position`]: payload.position,
         [`player${state.countPlayer}.wpm`]: payload.wpm,
         [`player${state.countPlayer}.username`]: state.username
       })
-        
     },
     playNow ({ commit, name }, roomlink) {
       db.collection('room').doc(`${roomlink}`).update({
