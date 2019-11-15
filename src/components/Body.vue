@@ -7,7 +7,7 @@
       <!-- image -->
       <!-- daring message  -->
       
-      <p class="detiled-text mt-4" style="font-family: 'Quicksand', sans-serif; font-size: 30px; color: #444547 "> Are you the fastest in conquering this set of typing race? </p>
+      <p class="detiled-text mt-5" style="font-family: 'Quicksand', sans-serif; font-size: 30px; color: #444547 "> Are you the fastest in conquering this set of typing race? </p>
       <p class="detiled-text" style="font-family: 'Quicksand', sans-serif; font-size: 15px; color: #444547 "> *psst you will be our master </p>
 
       <!-- daring message  -->
