@@ -97,8 +97,7 @@ export default {
       return newHTML
     },
     text () {
-      // return this.$store.state.objectData.text
-      return "evans"
+      return this.$store.state.objectData.text
     },
     posisi () {
       if (this.$store.state.objectData) {
