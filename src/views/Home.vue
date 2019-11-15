@@ -8,22 +8,12 @@
 </template>
 
 <script>
+import Body from '../components/Body.vue'
+
 export default {
   name: 'home',
   components: {
-
-  },
-  data () {
-    return {
-      username: ''
-    }
-  },
-  methods: {
-    createRoom () {
-      this.$store.dispatch('create', this.username)
-    }
-  },
-  created () {
+    Body
   }
 }
 </script>
