@@ -38,7 +38,7 @@ body, html {
 
 #app {
   /* background-image: url('./assets/orange.jpg'); */
-  background-color: #F4BF6F;
+  background-color: #febf6f;
   background-repeat: no-repeat;
   /* background-size: cover; */
   object-fit: contain;

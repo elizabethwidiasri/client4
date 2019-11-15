@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import router from '../router'
 import db from '../config/firebase'
 import texts from '../assets/english'
+import Swal from 'sweetalert2'
 // const firebase = require('firebase/app')
 
 Vue.use(Vuex)
@@ -40,7 +41,13 @@ export default new Vuex.Store({
   actions: {
     create ({ commit, state }, payload) {
       const index = Math.round(Math.random() * texts.length)
-      commit('CHANGE_NAME', payload)
+      Swal.fire({
+        imageUrl: 'https://static-steelkiwi-dev.s3.amazonaws.com/media/filer_public/4e/07/4e07eece-7c84-46e2-944d-1a6b856d7b5f/463ff844-6f36-4ffe-b051-fea983d39223.gif',
+        text: 'Creating your room...',
+        mageWidth: 200,
+        imageHeight: 200,
+        showConfirmButton: false
+      })
       db.collection('room').add(
         {
           count: 1,
@@ -57,9 +64,11 @@ export default new Vuex.Store({
         .then((docRef) => {
           commit('CHANGE_ROOM', docRef.id)
           commit('CHANGE_COUNT_PLAYER', 1)
+          commit('CHANGE_NAME', payload)
           commit('CHANGE_MASTER')
           router.push(`/about/${state.linkroom}`)
           console.log('Document written with ID: ', docRef.id)
+          Swal.close()
         })
         .catch(function (error) {
           console.error('Error adding document: ', error)

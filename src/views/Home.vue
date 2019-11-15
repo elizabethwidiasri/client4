@@ -1,10 +1,5 @@
 <template>
-  <div class="home" style="">
-    <form @submit.prevent="createRoom()">
-      <input v-model="username" type="text" placeholder="username">
-      <button type="submit">CreateRoom</button>
-    </form>
-  </div>
+  <Body />
 </template>
 
 <script>
