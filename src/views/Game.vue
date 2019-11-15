@@ -1,6 +1,6 @@
 <template>
   <div id="app" oncopy="return false" oncut="return false" onpaste="return false">
-    <b-navbar toggleable="lg" type="dark" variant="primary">
+    <b-navbar toggleable="lg" type="dark" variant="primary" class="navCustom">
       <b-navbar-brand href="#" variant="light"><strong>BALAPAN NGETIK</strong></b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -15,24 +15,28 @@
     </div>
     <b-container class="mt-5">
       <b-container class="gamecontainer">
-        <b-row class="my-5">
-          <div class="paragraph" v-html="outputHTML">
+        <b-row class="mb-4">
+          <div class="paragraph mb-3" v-html="outputHTML">
           </div>
-          <div>
-            <h4>{{ time }}</h4>
-          </div>
-          <div class="typer">
+          <div class="typer mb-3">
             <textarea
               autofocus="autofocus"
               v-model="typing"
               placeholder="start typing here"
               @keydown="prevent">
             </textarea>
+          </div>
+          <div class="center">
+            <div class="alert alert-warning alert-dismissible fade show mr-3">
+              TIME: {{ time }}
+            </div>
+            <div class="alert alert-success alert-dismissible fade show mr-3">
+              WPM: {{ wpm.toFixed(0) }}
+            </div>
             <div v-if="typoIndex != -1" class="alert alert-danger alert-dismissible fade show">
               WRONG TYPING!
             </div>
           </div>
-          <h4>{{ wpm.toFixed(0) }} WPM</h4>
         </b-row>
       </b-container>
     </b-container>
@@ -93,7 +97,7 @@ export default {
     },
     posisi () {
       if (this.$store.state.objectData) {
-        return (((this.$store.state.objectData.player1.position) / this.$store.state.objectData.text.length) * 100)
+        return (((this.$store.state.objectData.player1.position) / this.text.length) * 100)
       } else {
         return 0
       }
@@ -142,7 +146,7 @@ export default {
         })
           .then(() => {
             alert(`game selesai, WPM kamu sebesar ${lastwpm.toFixed(1)} dengan kata yang benar sebanyak ${lastposition}`)
-            this.$router.push({ path: '/' })
+            // this.$router.push({ path: '/' })
             console.log('Document successfully updated!')
           })
           .catch(function (err) {
@@ -167,31 +171,41 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+  .navCustom{
+    background-color: #62B69B !important;
+  }
+  #app{
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    top: 0px;
+    overflow-x: hidden;
+    background-color: #F4BF6F;
+  }
   .gamecontainer {
-    max-width: 700px;
+    max-width: 90%;
     font-size: 22px;
     text-align: left;
   }
   .paragraph {
-    margin-bottom: 50px;
+    /* margin-bottom: 50px; */
   }
   textarea {
     width: 100%;
-    background: transparent;
+    background: white;
   }
   .typer {
     width: 100%;
   }
-  .correct {
-    color: rgb(51, 255, 0);
-    font-size: 22px;
+  .animation{
+    display: flex;
+    margin: 0px 5% 0px 5%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    flex-wrap: wrap;
+    height: 30%;
   }
-  .typo {
-    color: #f00;
-    font-size: 23px;
-  }
-
   .track {
     color: aliceblue;
     background-image: url('../assets/track.jpg');
@@ -200,6 +214,8 @@ export default {
     display: flex;
     align-items: center;
     padding: 0px 10% 0px 5%;
+    width: 48%;
+    margin: 0px 1% 0px 1%;
   }
   .emot{
     font-size: 60px;
@@ -210,5 +226,21 @@ export default {
     border-radius: 20%;
     padding: 5px;
     font-size: 20px;
+  }
+  .center{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+</style>
+
+<style>
+  .correct {
+    color: rgb(60, 214, 21);
+    font-size: 22px;
+  }
+  .typo {
+    color: #f00;
+    font-size: 23px;
   }
 </style>
