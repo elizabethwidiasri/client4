@@ -1,8 +1,9 @@
 <template>
-  <div id="app" oncopy="return false" oncut="return false" onpaste="return false">
+<div class="game">
+  <result v-if="finish"></result>
+  <div v-if="!finish" id="app" oncopy="return false" oncut="return false" onpaste="return false">
     <b-navbar toggleable="lg" type="dark" variant="primary" class="navCustom">
       <b-navbar-brand href="#" variant="light"><strong>BALAPAN NGETIK</strong></b-navbar-brand>
-
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
         <!-- Right aligned nav items -->
@@ -41,7 +42,7 @@
       </b-container>
     </b-container>
 
-    <!-- {{ player }} -->
+    {{ players }}
     <div class="animation">
       <div class="track" v-for="(player, i) in players" :key="i">
         <div class="emot" :style="'margin-left:'+posisi+'%;'">{{ emojiList[i] }}</div>
@@ -49,9 +50,12 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
+import texts from '../assets/english'
+import result from '../components/result'
 // import texts from '../assets/english'
 export default {
   name: 'Game',
@@ -61,11 +65,15 @@ export default {
       typoIndex: -1,
       correctWord: 0,
       wpm: 0,
+      finish: false,
       started: '',
       time: 30,
       countTime: '',
       emojiList: ['🐶', '🐹', '🐰', '🦊', '🦝', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🙉', '🐔', '🐧', '🐥', '🦉', '🐺', '🐴', '🦋', '🐌', '🐞', '🐳', '🦍', '🐘', '🦔']
     }
+  },
+  components: {
+    result
   },
   computed: {
     splitText () {
@@ -93,7 +101,6 @@ export default {
     },
     text () {
       return this.$store.state.objectData.text
-      // return texts[0].text
     },
     posisi () {
       if (this.$store.state.objectData) {
@@ -129,14 +136,18 @@ export default {
   },
   watch: {
     typing (value) {
-      this.playSound('https://www.soundjay.com/button/button-48.mp3')
-      for (let i = 0; i < value.length; i++) {
-        if (value[i] !== this.text[i]) {
-          this.typoIndex = i
-          break
+      if (value.length === this.text.length) {
+        this.finish = true
+      } else {
+        for (let i = 0; i < value.length; i++) {
+          if (value[i] !== this.text[i]) {
+            this.typoIndex = i
+            break
+          }
+          this.typoIndex = -1
         }
-        this.typoIndex = -1
       }
+      this.playSound('https://www.soundjay.com/button/button-48.mp3')
       this.correctWord = this.typing.split(' ').length
       this.wpm = this.correctWord / ((Date.now() - this.started) / 60000)
     },
@@ -152,8 +163,9 @@ export default {
           room: this.$route.params.room
         })
           .then(() => {
-            alert(`game selesai, WPM kamu sebesar ${lastwpm.toFixed(1)} dengan kata yang benar sebanyak ${lastposition}`)
+            // alert(`game selesai, WPM kamu sebesar ${lastwpm.toFixed(1)} dengan kata yang benar sebanyak ${lastposition}`)
             // this.$router.push({ path: '/' })
+            this.finish = true
             console.log('Document successfully updated!')
           })
           .catch(function (err) {

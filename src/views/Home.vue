@@ -1,5 +1,5 @@
 <template>
- <Body />
+  <Body />
 </template>
 
 <script>
