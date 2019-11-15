@@ -66,6 +66,4 @@ body, html {
 @import url('https://fonts.googleapis.com/css?family=Abril+Fatface&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Quicksand&display=swap');
 
-
-
 </style>
